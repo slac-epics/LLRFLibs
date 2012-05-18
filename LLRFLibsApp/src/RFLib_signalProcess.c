@@ -15,6 +15,10 @@
  * Modified by: Zheqiao Geng
  * Modified on: 2011.08.27
  * Description: Add the function to limit the phase measurement results (-360, 360)
+ *
+ * Modified by: Zheqiao Geng
+ * Modified on: 2011.09.24
+ * Description: Fix the bug of demodulation algorithm, add a factor of 2
  ****************************************************/
 #include "MathLib_dataProcess.h"
 #include "RFLib_signalProcess.h"
@@ -140,8 +144,8 @@ int RFLIB_rfDemod(short *rawDataBuf, int pointNum, int demodIdCur, short *IOutBu
     /* Demodulation */
     for(i = 0; i < pointNum; i ++) {        
         /* accumulation */
-        var_accI += *(rawDataBuf + i) * var_cs[var_index] / RFLIB_CONST_SAMPLE_NUM;
-        var_accQ += *(rawDataBuf + i) * var_sn[var_index] / RFLIB_CONST_SAMPLE_NUM;
+        var_accI += *(rawDataBuf + i) * var_cs[var_index] * 2 / RFLIB_CONST_SAMPLE_NUM;
+        var_accQ += *(rawDataBuf + i) * var_sn[var_index] * 2 / RFLIB_CONST_SAMPLE_NUM;
         
         /* shift registers */
         for(j = RFLIB_CONST_SAMPLE_NUM; j > 0; j--) {

@@ -34,6 +34,8 @@ extern "C" {
 #define MATHLIB_max(a, b)   ((a>b)?a:b)
 #define MATHLIB_min(a, b)   ((a<b)?a:b)
 
+#define MATHLIB_relativeErr(a, b)   ((b-a)/a)
+
 /* Bits calculation */
 #define MATHLIB_u32ToShortHi(data_ptr)  (*((short *)(data_ptr) + 1))        /* get the higher 16 bits of a unsigned int data as a signed short */
 #define MATHLIB_u32ToShortLo(data_ptr)  (*((short *)(data_ptr)))            /* get the lower 16 bits of a unsigned int data as a signed short */

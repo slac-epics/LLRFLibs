@@ -46,6 +46,7 @@ extern "C" {
 /* Data model for the RF waveform */
 typedef struct {    
     volatile unsigned long chId;                    /* (note: all chId is for 16 bits, can be any number) raw: any number; I/Q: 0,2,4,... */
+    volatile unsigned short valid;                  /* 1 to indicate that this waveform is valid */
 
     long pointNum;                                  /* number of the effective points */
     long demodCoefIdCur;                            /* ID offset of the coefficient */

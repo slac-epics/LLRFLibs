@@ -1,0 +1,5 @@
+This module collects all domain knowledge for LLRF control, 
+including a mathematic library and algorithms and routines 
+for RF signal processing. 
+This module is independent to EPICS.
+

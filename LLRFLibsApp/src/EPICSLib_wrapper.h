@@ -65,6 +65,7 @@ typedef epicsThreadId EPICSLIB_type_threadId;
                                                             epicsThreadGetStackSize(epicsThreadStackMedium), \
                                                             (EPICSTHREADFUNC)(func), arg)
 #define EPICSLIB_func_threadSetPriority                       epicsThreadSetPriority
+#define EPICSLIB_func_epicsThreadSleep                        epicsThreadSleep
 
 /* for mutex handling */
 typedef epicsMutexId EPICSLIB_type_mutexId;

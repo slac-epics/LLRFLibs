@@ -126,7 +126,7 @@ int RFLIB_rfDemod(short *rawDataBuf, int pointNum, int demodIdCur, short *IOutBu
     double var_pipeI[RFLIB_CONST_SAMPLE_NUM + 1] = {0.0};   /* shift registers */
     double var_pipeQ[RFLIB_CONST_SAMPLE_NUM + 1] = {0.0};
     
-    double var_phaStep = RFLIB_CONST_CYCLE_NUM * 2 * RFLIB_CONST_PI / RFLIB_CONST_SAMPLE_NUM;
+    double var_phaStep = RFLIB_CONST_CYCLE_NUM * RFLIB_CONST_2PI / RFLIB_CONST_SAMPLE_NUM;
     
     double var_accI     = 0;
     double var_accQ     = 0;
@@ -168,6 +168,46 @@ int RFLIB_rfDemod(short *rawDataBuf, int pointNum, int demodIdCur, short *IOutBu
     return 0;
 }
 
+int RFLIB_rfDemod_IQ(short *rawDataBuf, int pointNum, short *IOutBuf, short *QOutBuf)
+{
+	int i, count = 0;
+
+    /* Check the input */
+    if(!rawDataBuf || !IOutBuf || !QOutBuf || pointNum <= 3) return -1;
+
+	/* use the matlab implementation */
+	for(i = 0; i < pointNum - 3; i ++) {
+		count ++;
+
+		if(count == 1) {
+			*(IOutBuf + i) =  (*(rawDataBuf + i)     - *(rawDataBuf + i + 2)) / 2; 
+			*(QOutBuf + i) =  (*(rawDataBuf + i + 1) - *(rawDataBuf + i + 3)) / 2;
+		} else if(count == 2) {
+			*(IOutBuf + i) = -(*(rawDataBuf + i + 1) - *(rawDataBuf + i + 3)) / 2; 
+			*(QOutBuf + i) =  (*(rawDataBuf + i)     - *(rawDataBuf + i + 2)) / 2;
+		} else if(count == 3) {
+			*(IOutBuf + i) = -(*(rawDataBuf + i)     - *(rawDataBuf + i + 2)) / 2; 
+			*(QOutBuf + i) = -(*(rawDataBuf + i + 1) - *(rawDataBuf + i + 3)) / 2;
+		} else {
+			*(IOutBuf + i) =  (*(rawDataBuf + i + 1) - *(rawDataBuf + i + 3)) / 2; 
+			*(QOutBuf + i) = -(*(rawDataBuf + i)     - *(rawDataBuf + i + 2)) / 2;
+			
+			count = 0;
+		}
+	}
+
+	/* fit the last several data */
+	*(IOutBuf + pointNum - 3) = *(IOutBuf + pointNum - 4);
+	*(QOutBuf + pointNum - 3) = *(QOutBuf + pointNum - 4);
+	*(IOutBuf + pointNum - 2) = *(IOutBuf + pointNum - 4);
+	*(QOutBuf + pointNum - 2) = *(QOutBuf + pointNum - 4);
+	*(IOutBuf + pointNum - 1) = *(IOutBuf + pointNum - 4);
+	*(QOutBuf + pointNum - 1) = *(QOutBuf + pointNum - 4);
+
+	return 0;
+}
+
+
 /**
  * Demodulate the RF waveform
  * Input:
@@ -188,6 +228,7 @@ int RFLIB_RFWaveformDemod(RFLIB_struc_RFWaveform *wf)
     pno = MATHLIB_min(wf->pointNum, RFLIB_CONST_WF_SIZE);               /* to avoid overflow */
 
     status = RFLIB_rfDemod(wf->wfRaw, pno, (int)wf->demodCoefIdCur, wf->wfI, wf->wfQ);
+    /*status = RFLIB_rfDemod_IQ(wf->wfRaw, pno, wf->wfI, wf->wfQ);*/
     
     return status;
 }

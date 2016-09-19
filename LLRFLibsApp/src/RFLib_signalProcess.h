@@ -37,8 +37,8 @@ extern "C" {
 
 #define RFLIB_CONST_WF_SIZE     65536               /* buffer size of the waveforms */
 
-#define RFLIB_CONST_SAMPLE_NUM  14                  /* sample number */
-#define RFLIB_CONST_CYCLE_NUM   3                   /* RF cycles fully sampled by the point number of RFLIB_CONST_SAMPLE_NUM */
+#define RFLIB_CONST_SAMPLE_NUM  21                  /* sample number */
+#define RFLIB_CONST_CYCLE_NUM   5                   /* RF cycles fully sampled by the point number of RFLIB_CONST_SAMPLE_NUM */
 
 /*======================================
  * Data models
@@ -115,6 +115,7 @@ int     RFLIB_initAnalogWaveform(RFLIB_struc_analogWaveform *wf, long pointNum);
 
 /* RF signal processing */
 int     RFLIB_rfDemod(short *rawDataBuf, int pointNum, int demodIdCur, short *IOutBuf, short *QOutBuf);
+int     RFLIB_rfDemod_IQ(short *rawDataBuf, int pointNum, short *IOutBuf, short *QOutBuf);
 
 /* LLRF procedures */
 int     RFLIB_RFWaveformDemod(RFLIB_struc_RFWaveform *wf);                              /* demodulate the RF waveform */
